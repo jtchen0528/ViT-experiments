@@ -77,9 +77,6 @@ train_loader = data.DataLoader(
 test_loader = data.DataLoader(
     test_ds, batch_size=BATCH_SIZE, shuffle=True)
 
-# %%
-x = next(iter(test_ds))
-print(x.shape)
 #%%
 best_eval = 0
 os.makedirs('checkpoints/' + MODEL_NAME, exist_ok=True)
