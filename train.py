@@ -52,8 +52,8 @@ train_ds = torchvision.datasets.ImageFolder(
 classes = train_ds.classes
 classes_with_id = train_ds.class_to_idx
 
-eval_ds = CreateDataset(folder='data/tiny-imagenet-200/val/',
-                        transform=transform, classes=classes)
+# eval_ds = CreateDataset(folder='data/tiny-imagenet-200/val/',
+#                         transform=transform, classes=classes)
 test_ds = CreateDataset(folder=TEST_DS_PATH,
                         transform=transform, classes=classes)
 # %%
