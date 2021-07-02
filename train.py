@@ -13,19 +13,26 @@ import argparse
 
 import models.model_utils as model_utils
 
-from datautil.dataset import CreateDataset
+from datautil.dataset import CreateDataset, TrainDataset
 
 # %%
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-e", "--epoch", help="epoch", type=int, default=100)
-parser.add_argument("-bs", "--batch_size", help="batch size", type=int, default=32)
-parser.add_argument("-lr", "--learning_rate", help="learning rate", type=float, default=2e-5)
-parser.add_argument("-train_dir", "---train_dir", help="train data directory", type=str, default='dataset/tiny-imagenet-200/train/')
-parser.add_argument("-test_dir", "---test_dir", help="test data directory", type=str, default='dataset/tiny-imagenet-200/val/')
-parser.add_argument("-m", "--model_name", help="vit model type", type=str, default='vit')
-parser.add_argument("-img_size", "--img_size", help="image size", type=int, default=64)
-parser.add_argument("-patch_size", "--patch_size", help="patch size", type=int, default=8)
+parser.add_argument("-bs", "--batch_size",
+                    help="batch size", type=int, default=32)
+parser.add_argument("-lr", "--learning_rate",
+                    help="learning rate", type=float, default=2e-5)
+parser.add_argument("-train_dir", "---train_dir", help="train data directory",
+                    type=str, default='dataset/tiny-imagenet-200/train/')
+parser.add_argument("-test_dir", "---test_dir", help="test data directory",
+                    type=str, default='dataset/tiny-imagenet-200/val/')
+parser.add_argument("-m", "--model_name",
+                    help="vit model type", type=str, default='vit')
+parser.add_argument("-img_size", "--img_size",
+                    help="image size", type=int, default=64)
+parser.add_argument("-patch_size", "--patch_size",
+                    help="patch size", type=int, default=8)
 parser.add_argument("-gpu", "--gpu_id", help="gpu id", type=int, default=0)
 
 args = parser.parse_args()
@@ -46,11 +53,9 @@ CUDA = torch.cuda.is_available()
 transform = transforms.Compose(
     [transforms.ToTensor()])
 
-train_ds = torchvision.datasets.ImageFolder(
-    TRAIN_DS_PATH, transform=transform)
+train_ds = TrainDataset(folder=TRAIN_DS_PATH, transform=transform)
 
 classes = train_ds.classes
-classes_with_id = train_ds.class_to_idx
 
 # eval_ds = CreateDataset(folder='data/tiny-imagenet-200/val/',
 #                         transform=transform, classes=classes)
@@ -77,7 +82,7 @@ train_loader = data.DataLoader(
 test_loader = data.DataLoader(
     test_ds, batch_size=BATCH_SIZE, shuffle=True)
 
-#%%
+# %%
 best_eval = 0
 os.makedirs('checkpoints/' + MODEL_NAME, exist_ok=True)
 
@@ -126,8 +131,7 @@ for epoch in range(EPOCHS):
             optimizer.step()
             test_output = test_output.argmax(1)
             # Calculate Accuracy
-            print(test_output[:10])
-            print(test_y[:10])
+
             accuracy = (test_output == test_y).sum().item() / BATCH_SIZE
             print('Epoch: ', epoch, '| train loss: %.4f' %
                   loss, '| test accuracy: %.2f' % accuracy)
