@@ -24,7 +24,7 @@ def create_model(model_name='vit', img_size=64, patch_size=8, num_classes=1000):
             num_classes=num_classes,
             head_dim=64,
             window_size=patch_size,
-            downscaling_factors=(4, 2, 2, 2),
+            downscaling_factors=(2, 2, 2, 1),
             relative_pos_embedding=True
         )
     return model

@@ -9,17 +9,34 @@ from torchvision import transforms
 import torch.nn.functional as F
 import torch.nn as nn
 import torchvision
+import argparse
 
 import models.model_utils as model_utils
 
 from datautil.dataset import CreateDataset
+
 # %%
-EPOCHS = 100
-BATCH_SIZE = 32
-LEARNING_RATE = 2e-5
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-e", "--epoch", help="epoch", type=int, default=100)
+parser.add_argument("-bs", "--batch_size", help="batch size", type=int, default=32)
+parser.add_argument("-lr", "--learning_rate", help="learning rate", type=float, default=2e-5)
+parser.add_argument("-train_dir", "---train_dir", help="train data directory", type=str, default='data/tiny-imagenet-200/train/')
+parser.add_argument("-test_dir", "---test_dir", help="test data directory", type=str, default='data/tiny-imagenet-200/val/')
+parser.add_argument("-m", "--model_name", help="vit model type", type=str, default='vit')
+parser.add_argument("-img_size", "--img_size", help="image size", type=int, default=64)
+parser.add_argument("-patch_size", "--patch_size", help="patch size", type=int, default=8)
+parser.add_argument("-gpu", "--gpu_id", help="gpu id", type=int, default=0)
+
+args = parser.parse_args()
+
+# %%
+EPOCHS = args.epoch
+BATCH_SIZE = args.epoch
+LEARNING_RATE = args.epoch
 TRAIN_DS_PATH = 'data/tiny-imagenet-200/train/'
 TEST_DS_PATH = 'data/tiny-imagenet-200/val/'
-MODEL_NAME = 'vit'
+MODEL_NAME = 'swin'
 IMG_SIZE = 64
 PATCH_SIZE = 8
 GPU_ID = 0
@@ -50,6 +67,7 @@ loss_func = nn.CrossEntropyLoss()
 
 if CUDA:
     model.to(GPU_ID)
+
 # %%
 print("Number of train samples: ", len(train_ds))
 print("Number of test samples: ", len(test_ds))
@@ -117,3 +135,4 @@ for epoch in range(EPOCHS):
             if accuracy > best_eval:
                 best_eval = accuracy
                 torch.save(model.state_dict(), "checkpoints/vit.pth")
+# %%
