@@ -32,14 +32,14 @@ args = parser.parse_args()
 
 # %%
 EPOCHS = args.epoch
-BATCH_SIZE = args.epoch
-LEARNING_RATE = args.epoch
-TRAIN_DS_PATH = 'data/tiny-imagenet-200/train/'
-TEST_DS_PATH = 'data/tiny-imagenet-200/val/'
-MODEL_NAME = 'swin'
-IMG_SIZE = 64
-PATCH_SIZE = 8
-GPU_ID = 0
+BATCH_SIZE = args.batch_size
+LEARNING_RATE = args.learning_rate
+TRAIN_DS_PATH = args.train_dir
+TEST_DS_PATH = args.test_dir
+MODEL_NAME = args.model_name
+IMG_SIZE = args.img_size
+PATCH_SIZE = args.patch_size
+GPU_ID = args.gpu_id
 CUDA = torch.cuda.is_available()
 # %%
 
