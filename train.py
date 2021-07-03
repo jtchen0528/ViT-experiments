@@ -137,5 +137,5 @@ for epoch in range(EPOCHS):
                   loss, '| test accuracy: %.2f' % accuracy)
             if accuracy > best_eval:
                 best_eval = accuracy
-                torch.save(model.state_dict(), "checkpoints/vit.pth")
+                torch.save(model.state_dict(), "checkpoints/{}/best_val.pth".format(args.model_name))
 # %%
