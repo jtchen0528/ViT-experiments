@@ -163,10 +163,7 @@ def train_one_epoch(config, model, criterion, data_loader, optimizer, epoch, mix
 
         if mixup_fn is not None:
             samples, targets = mixup_fn(samples, targets)
-        print(samples.shape, targets.shape)
-        print(targets[0])
         outputs = model(samples)
-        print(outputs.shape)
 
         if config.TRAIN.ACCUMULATION_STEPS > 1:
             loss = criterion(outputs, targets)
