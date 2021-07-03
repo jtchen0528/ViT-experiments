@@ -166,8 +166,6 @@ _C.EVAL_MODE = False
 # Test throughput only, overwritten by command line argument
 _C.THROUGHPUT_MODE = False
 # local rank for DistributedDataParallel, given by command line argument
-_C.LOCAL_RANK = 0
-
 
 def _update_config_from_file(config, cfg_file):
     config.defrost()
