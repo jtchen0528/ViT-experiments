@@ -8,7 +8,6 @@
 import os
 import torch
 import numpy as np
-import torch.distributed as dist
 from torchvision import datasets, transforms
 from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from timm.data import Mixup
@@ -24,25 +23,24 @@ def build_loader(config):
     config.defrost()
     dataset_train, config.MODEL.NUM_CLASSES = build_dataset(is_train=True, config=config)
     config.freeze()
-    print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build train dataset")
     dataset_val, _ = build_dataset(is_train=False, config=config)
-    print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build val dataset")
 
-    num_tasks = dist.get_world_size()
-    global_rank = dist.get_rank()
-    if config.DATA.ZIP_MODE and config.DATA.CACHE_MODE == 'part':
-        indices = np.arange(dist.get_rank(), len(dataset_train), dist.get_world_size())
-        sampler_train = SubsetRandomSampler(indices)
-    else:
-        sampler_train = torch.utils.data.DistributedSampler(
-            dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True
-        )
+    # num_tasks = dist.get_world_size()
+    # global_rank = dist.get_rank()
+    # if config.DATA.ZIP_MODE and config.DATA.CACHE_MODE == 'part':
+    #     indices = np.arange(dist.get_rank(), len(dataset_train), dist.get_world_size())
+    #     sampler_train = SubsetRandomSampler(indices)
+    # else:
+    #     sampler_train = torch.utils.data.DistributedSampler(
+    #         dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True
+    #     )
 
-    indices = np.arange(dist.get_rank(), len(dataset_val), dist.get_world_size())
-    sampler_val = SubsetRandomSampler(indices)
+    # indices = np.arange(dist.get_rank(), len(dataset_val), dist.get_world_size())
+    # sampler_val = SubsetRandomSampler(indices)
 
     data_loader_train = torch.utils.data.DataLoader(
-        dataset_train, sampler=sampler_train,
+        dataset_train, 
+        # sampler=sampler_train,
         batch_size=config.DATA.BATCH_SIZE,
         num_workers=config.DATA.NUM_WORKERS,
         pin_memory=config.DATA.PIN_MEMORY,
@@ -50,7 +48,8 @@ def build_loader(config):
     )
 
     data_loader_val = torch.utils.data.DataLoader(
-        dataset_val, sampler=sampler_val,
+        dataset_val, 
+        # sampler=sampler_val,
         batch_size=config.DATA.BATCH_SIZE,
         shuffle=False,
         num_workers=config.DATA.NUM_WORKERS,
