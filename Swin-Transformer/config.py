@@ -166,6 +166,7 @@ _C.EVAL_MODE = False
 # Test throughput only, overwritten by command line argument
 _C.THROUGHPUT_MODE = False
 # local rank for DistributedDataParallel, given by command line argument
+_C.GPU = 0
 
 def _update_config_from_file(config, cfg_file):
     config.defrost()
@@ -216,6 +217,8 @@ def update_config(config, args):
         config.THROUGHPUT_MODE = True
 
     # set local rank for distributed training
+    if args.gpu:
+        config.GPU = args.gpu
 
     # output folder
     config.OUTPUT = os.path.join(config.OUTPUT, config.MODEL.NAME, config.TAG)
