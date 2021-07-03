@@ -63,7 +63,7 @@ def parse_option():
     parser.add_argument('--throughput', action='store_true', help='Test throughput only')
 
     # distributed training
-    parser.add_argument("--gpu", type=int, required=True, help='GPU')
+    parser.add_argument("--gpu", type=int, default=0, help='GPU')
 
     args, unparsed = parser.parse_known_args()
 
