@@ -63,7 +63,7 @@ def parse_option():
     parser.add_argument('--throughput', action='store_true', help='Test throughput only')
 
     # distributed training
-    parser.add_argument("--local_rank", type=int, required=True, help='local rank for DistributedDataParallel')
+    parser.add_argument("--gpu", type=int, required=True, help='GPU')
 
     args, unparsed = parser.parse_known_args()
 
@@ -83,7 +83,7 @@ def main(config):
     optimizer = build_optimizer(config, model)
     if config.AMP_OPT_LEVEL != "O0":
         model, optimizer = amp.initialize(model, optimizer, opt_level=config.AMP_OPT_LEVEL)
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[config.LOCAL_RANK], broadcast_buffers=False)
+    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[config.gpu], broadcast_buffers=False)
     model_without_ddp = model.module
 
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -307,7 +307,7 @@ if __name__ == '__main__':
     else:
         rank = -1
         world_size = -1
-    torch.cuda.set_device(config.LOCAL_RANK)
+    torch.cuda.set_device(config.gpu)
 
     seed = config.SEED
     torch.manual_seed(seed)
