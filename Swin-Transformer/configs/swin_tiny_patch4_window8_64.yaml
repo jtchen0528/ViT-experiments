@@ -9,7 +9,7 @@ MODEL:
     WINDOW_SIZE: 8
 DATA:
   DATASET: tiny_imagenet
-  DATAPATH: dataset/tiny-imagenet-200
+  DATAPATH: ../dataset/tiny-imagenet-200
   IMG_SIZE: 64
   BATCH_SIZE: 32
 TRAIN:
