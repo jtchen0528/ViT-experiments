@@ -1,0 +1,20 @@
+MODEL:
+  TYPE: swin
+  NAME: swin_tiny_patch4_window8_64
+  DROP_PATH_RATE: 0.2
+  SWIN:
+    EMBED_DIM: 96
+    DEPTHS: [ 2, 2, 6, 2 ]
+    NUM_HEADS: [ 3, 6, 12, 24 ]
+    WINDOW_SIZE: 8
+DATA:
+  DATASET: tiny_imagenet
+  DATAPATH: dataset/tiny-imagenet-200
+  IMG_SIZE: 64
+  BATCH_SIZE: 32
+TRAIN:
+  EPOCHS: 100
+  START_EPOCH: 0
+  SAVE_FREQ: 10
+LOCAL_RANK: 0
+OUTPUT: checkpoints/swin_tiny_patch4_window8_64/
