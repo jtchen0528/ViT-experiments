@@ -59,8 +59,7 @@ classes = train_ds.classes
 
 # eval_ds = CreateDataset(folder='data/tiny-imagenet-200/val/',
 #                         transform=transform, classes=classes)
-test_ds = CreateDataset(folder=TEST_DS_PATH,
-                        transform=transform, classes=classes)
+test_ds = TrainDataset(folder=TRAIN_DS_PATH, transform=transform)
 # %%
 # Define Model
 
