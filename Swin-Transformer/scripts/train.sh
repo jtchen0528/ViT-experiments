@@ -1,0 +1,1 @@
+python main.py --cfg configs/swin_tiny_patch4_window8_64.yaml --data-path ../dataset/tiny-imagenet-200/
