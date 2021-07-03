@@ -85,11 +85,8 @@ def build_dataset(is_train, config):
     elif config.DATA.DATASET == 'tiny_imagenet':
         prefix = 'train' if is_train else 'val'
         root = os.path.join(config.DATA.DATA_PATH, prefix)
-        if is_train:
-            dataset = datasets.ImageFolder(root, transform=transform)
-            nb_classes = dataset.classes
-        else:
-            dataset = CreateDataset(root, transform=transform)
+        dataset = datasets.ImageFolder(root, transform=transform)
+        nb_classes = dataset.classes
     else:
         raise NotImplementedError("We only support ImageNet Now.")
 
