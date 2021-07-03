@@ -86,7 +86,7 @@ def build_dataset(is_train, config):
         prefix = 'train' if is_train else 'val'
         root = os.path.join(config.DATA.DATA_PATH, prefix)
         dataset = datasets.ImageFolder(root, transform=transform)
-        nb_classes = dataset.classes
+        nb_classes = len(dataset.classes)
     else:
         raise NotImplementedError("We only support ImageNet Now.")
 
