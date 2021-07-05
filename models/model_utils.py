@@ -3,6 +3,7 @@ from .vit import ViT
 from .swin_transformer import SwinTransformer
 from .CvT import CvT
 from .dino import Dino
+from .msvit import MsViT
 
 
 def create_model(model_name='vit', img_size=64, patch_size=8, num_classes=1000):
@@ -45,6 +46,13 @@ def create_model(model_name='vit', img_size=64, patch_size=8, num_classes=1000):
             kernels=[7, 3, 3],
             strides=[4, 2, 2],
             depth=[1, 2, 10]
+        )
+    elif model_name == 'vil':
+        model = MsViT(
+            arch = 'l1,h3,d96,n1,s1,g1,p4,f7,a0_l2,h3,d192,n2,s1,g1,p2,f7,a0_l3,h6,d384,n8,s0,g1,p2,f7,a0_l4,h12,d768,n1,s0,g0,p2,f7,a0',
+            img_size=img_size,
+            in_chans=3,
+            num_classes=num_classes
         )
     if head != None:
         if head == 'Dino':

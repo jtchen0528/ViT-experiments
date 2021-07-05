@@ -1,1 +1,1 @@
-python train.py -m dino_cvt -e 50 -gpu 5
+python train.py -m vil -e 50 -gpu 6
