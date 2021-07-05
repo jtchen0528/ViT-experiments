@@ -81,6 +81,7 @@ if LOAD:
     for f in model_path_files:
         if f[:2] == 'ep':
             model.load_state_dict(torch.load(MODEL_PATH + '/' + f))
+            CURR_EPOCH = int(f.split('.')[0][2:])
         elif f == 'loss.txt':
             loss_file = json.loads(open(MODEL_PATH + '/' + f, 'r'))
             train_loss_list = loss_file['Train Loss']
@@ -112,6 +113,8 @@ os.makedirs('checkpoints/{}/im{}_p{}_lr{}'.format(
 
 # Train the model
 for epoch in range(EPOCHS):
+    if epoch == 0 and LOAD == True:
+        epoch = CURR_EPOCH
     for step, (x, y) in enumerate(train_loader):
         # Change input array into list with each batch being one element
         x = np.split(np.squeeze(np.array(x)), BATCH_SIZE)
@@ -178,22 +181,19 @@ for epoch in range(EPOCHS):
                 best_eval = accuracy_top1
                 torch.save(model.state_dict(), "checkpoints/{}/im{}_p{}_lr{}/best_val.pth".format(
                     args.model_name, args.img_size, args.patch_size, args.learning_rate))
-    loss_file = open("checkpoints/{}/im{}_p{}_lr{}/loss.txt".format(
-        args.model_name, args.img_size, args.patch_size, args.learning_rate), 'w')
-    acc_file = open("checkpoints/{}/im{}_p{}_lr{}/acc.txt".format(args.model_name,
-                    args.img_size, args.patch_size, args.learning_rate), 'w')
-    loss_file.write(
-        {
-            'Train Loss': train_loss_list,
-            'Test Loss': test_loss_list,
-        }
-    )
-    acc_file.write(
-        {
-            'Accuracy Top1': acc_top1_list,
-            'Accuracy Top5': acc_top5_list,
-        }
-    )
+            loss_file = open("checkpoints/{}/im{}_p{}_lr{}/loss.txt".format(
+                args.model_name, args.img_size, args.patch_size, args.learning_rate), 'w')
+            acc_file = open("checkpoints/{}/im{}_p{}_lr{}/acc.txt".format(args.model_name,
+                            args.img_size, args.patch_size, args.learning_rate), 'w')
+            loss_file.write(json.stringify({
+                'Train Loss': train_loss_list,
+                'Test Loss': test_loss_list,
+            }))
+            acc_file.write(json.stringify({
+                'Accuracy Top1': acc_top1_list,
+                'Accuracy Top5': acc_top5_list,
+            }))
+
     os.remove("checkpoints/{}/im{}_p{}_lr{}/ep{}.pth".format(args.model_name,
               args.img_size, args.patch_size, args.learning_rate, epoch))
     torch.save(model.state_dict(), "checkpoints/{}/im{}_p{}_lr{}/ep{}.pth".format(
