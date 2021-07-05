@@ -13,7 +13,7 @@ import argparse
 
 import models.model_utils as model_utils
 
-from datautil.dataset import CreateDataset, TrainDataset
+from datautil.dataset import CreateDataset
 
 # %%
 
@@ -53,13 +53,11 @@ CUDA = torch.cuda.is_available()
 transform = transforms.Compose(
     [transforms.ToTensor()])
 
-train_ds = TrainDataset(folder=TRAIN_DS_PATH, transform=transform)
+train_ds = CreateDataset(folder=TRAIN_DS_PATH, transform=transform)
 
 classes = train_ds.classes
 
-# eval_ds = CreateDataset(folder='data/tiny-imagenet-200/val/',
-#                         transform=transform, classes=classes)
-test_ds = TrainDataset(folder=TRAIN_DS_PATH, transform=transform)
+test_ds = CreateDataset(folder=TEST_DS_PATH, transform=transform)
 # %%
 # Define Model
 
@@ -128,13 +126,15 @@ for epoch in range(EPOCHS):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            test_output = test_output.argmax(1)
+            test_output_top1 = test_output.argmax(1)
+            test_output_top5 = test_output.argmax(5)
+            print(test_output_top5)
             # Calculate Accuracy
 
-            accuracy = (test_output == test_y).sum().item() / BATCH_SIZE
+            accuracy_top1 = (test_output_top1 == test_y).sum().item() / BATCH_SIZE
             print('Epoch: ', epoch, '| train loss: %.4f' %
-                  loss, '| test accuracy: %.2f' % accuracy)
-            if accuracy > best_eval:
-                best_eval = accuracy
-                torch.save(model.state_dict(), "checkpoints/{}/best_val.pth".format(args.model_name))
+                  loss, '| test accuracy: %.2f' % accuracy_top1)
+            if accuracy_top1 > best_eval:
+                best_eval = accuracy_top1
+                torch.save(model.state_dict(), "checkpoints/{}/best_val_im{}_p{}_lr{}.pth".format(args.model_name, args.img_size, args.patch_size, args.learning_rate))
 # %%
