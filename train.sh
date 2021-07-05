@@ -1,1 +1,1 @@
-python train.py -m dino_swin -e 50 -gpu 3
+python train.py -m dino_cvt -e 50 -gpu 5
