@@ -8,8 +8,8 @@ import torch
 from torchvision import transforms
 import torch.nn.functional as F
 import torch.nn as nn
-import torchvision
 import argparse
+import json
 
 import models.model_utils as model_utils
 
@@ -18,6 +18,11 @@ from datautil.dataset import CreateDataset
 # %%
 
 parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-l", "--load", help="load previous model", type=bool, default=False)
+parser.add_argument("-pth", "--model_path",
+                    help="load previous model folder", type=str, default='')
+
 parser.add_argument("-e", "--epoch", help="epoch", type=int, default=100)
 parser.add_argument("-bs", "--batch_size",
                     help="batch size", type=int, default=32)
@@ -38,6 +43,8 @@ parser.add_argument("-gpu", "--gpu_id", help="gpu id", type=int, default=0)
 args = parser.parse_args()
 
 # %%
+LOAD = args.load
+MODEL_PATH = args.model_path
 EPOCHS = args.epoch
 BATCH_SIZE = args.batch_size
 LEARNING_RATE = args.learning_rate
@@ -61,9 +68,27 @@ test_ds = CreateDataset(folder=TEST_DS_PATH, transform=transform)
 # %%
 # Define Model
 
+train_loss_list = []
+test_loss_list = []
+acc_top1_list = []
+acc_top5_list = []
+
 model = model_utils.create_model(
     model_name=MODEL_NAME, img_size=IMG_SIZE, patch_size=PATCH_SIZE, num_classes=len(classes))
 
+if LOAD:
+    model_path_files = os.listdir(MODEL_PATH)
+    for f in model_path_files:
+        if f[:2] == 'ep':
+            model.load_state_dict(torch.load(MODEL_PATH + '/' + f))
+        elif f == 'loss.txt':
+            loss_file = json.loads(open(MODEL_PATH + '/' + f, 'r'))
+            train_loss_list = loss_file['Train Loss']
+            test_loss_list = loss_file['Test Loss']
+        elif f == 'acc.txt':
+            acc_file = json.loads(open(MODEL_PATH + '/' + f, 'r'))
+            acc_top1_list = loss_file['Accuracy Top1']
+            acc_top5_list = loss_file['Accuracy Top5']
 optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 loss_func = nn.CrossEntropyLoss()
 
@@ -82,10 +107,9 @@ test_loader = data.DataLoader(
 # %%
 best_eval = 0
 os.makedirs('checkpoints/' + MODEL_NAME, exist_ok=True)
-train_loss_list = []
-test_loss_list = []
-acc_top1_list = []
-acc_top5_list = []
+os.makedirs('checkpoints/{}/im{}_p{}_lr{}'.format(
+    args.model_name, args.img_size, args.patch_size, args.learning_rate), exist_ok=True)
+
 # Train the model
 for epoch in range(EPOCHS):
     for step, (x, y) in enumerate(train_loader):
@@ -149,13 +173,15 @@ for epoch in range(EPOCHS):
             acc_top1_list.append(round(accuracy_top1, 2))
             acc_top1_list.append(round(accuracy_top5, 2))
             print('Epoch: ', epoch, '| train loss: %.4f' %
-                  loss, '| top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %2f' % accuracy_top5, end="\r", flush=True)
+                  loss, '| top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %.2f' % accuracy_top5, end="\r", flush=True)
             if accuracy_top1 > best_eval:
                 best_eval = accuracy_top1
-                torch.save(model.state_dict(), "checkpoints/{}/best_val_im{}_p{}_lr{}.pth".format(
+                torch.save(model.state_dict(), "checkpoints/{}/im{}_p{}_lr{}/best_val.pth".format(
                     args.model_name, args.img_size, args.patch_size, args.learning_rate))
-    loss_file = open("checkpoints/{}/loss.txt", 'w')
-    acc_file = open("checkpoints/{}/acc.txt", 'w')
+    loss_file = open("checkpoints/{}/im{}_p{}_lr{}/loss.txt".format(
+        args.model_name, args.img_size, args.patch_size, args.learning_rate), 'w')
+    acc_file = open("checkpoints/{}/im{}_p{}_lr{}/acc.txt".format(args.model_name,
+                    args.img_size, args.patch_size, args.learning_rate), 'w')
     loss_file.write(
         {
             'Train Loss': train_loss_list,
@@ -168,9 +194,10 @@ for epoch in range(EPOCHS):
             'Accuracy Top5': acc_top5_list,
         }
     )
-    os.remove("checkpoints/{}/ep{}_im{}_p{}_lr{}.pth".format(args.model_name,
-              epoch, args.img_size, args.patch_size, args.learning_rate))
-    torch.save(model.state_dict(), "checkpoints/{}/ep{}_im{}_p{}_lr{}.pth".format(
-        args.model_name, epoch + 1, args.img_size, args.patch_size, args.learning_rate))
-
+    os.remove("checkpoints/{}/im{}_p{}_lr{}/ep{}.pth".format(args.model_name,
+              args.img_size, args.patch_size, args.learning_rate, epoch))
+    torch.save(model.state_dict(), "checkpoints/{}/im{}_p{}_lr{}/ep{}.pth".format(
+        args.model_name, args.img_size, args.patch_size, args.learning_rate, epoch + 1))
+    print('Epoch: ', epoch, '| train loss: %.4f' %
+          loss, '| top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %.2f' % accuracy_top5)
 # %%
