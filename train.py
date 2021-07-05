@@ -158,6 +158,8 @@ for epoch in range(EPOCHS):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            if MODEL_NAME.split('_')[0] == 'Dino':
+                model.update_moving_average()
             test_output_top1 = test_output.argmax(1)
             test_output_top5_val, test_output_top5 = test_output.topk(
                 5, dim=1, largest=True, sorted=True)

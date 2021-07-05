@@ -1,9 +1,16 @@
+from torch.functional import split
 from .vit import ViT
 from .swin_transformer import SwinTransformer
 from .CvT import CvT
+from .dino import Dino
 
 
 def create_model(model_name='vit', img_size=64, patch_size=8, num_classes=1000):
+    splits = model_name.split('_')
+    head = None
+    if len(splits) != 1:
+        model_name = splits[1]
+        head = splits[0]
     if model_name == 'vit':
         model = ViT(
             image_size=img_size,
@@ -39,4 +46,28 @@ def create_model(model_name='vit', img_size=64, patch_size=8, num_classes=1000):
             strides=[4, 2, 2],
             depth=[1, 2, 10]
         )
+    if head != None:
+        if head == 'Dino':
+            model = Dino(
+                model,
+                image_size=img_size,
+                # hidden layer name or index, from which to extract the embedding
+                hidden_layer='to_latent',
+                projection_hidden_size=img_size,      # projector network hidden dimension
+                projection_layers=4,             # number of layers in projection network
+                # output logits dimensions (referenced as K in paper)
+                num_classes_K=num_classes,
+                student_temp=0.9,                # student temperature
+                # teacher temperature, needs to be annealed from 0.04 to 0.07 over 30 epochs
+                teacher_temp=0.04,
+                # upper bound for local crop - 0.4 was recommended in the paper
+                local_upper_crop_scale=0.4,
+                # lower bound for global crop - 0.5 was recommended in the paper
+                global_lower_crop_scale=0.5,
+                # moving average of encoder - paper showed anywhere from 0.9 to 0.999 was ok
+                moving_average_decay=0.9,
+                # moving average of teacher centers - paper showed anywhere from 0.9 to 0.999 was ok
+                center_moving_average_decay=0.9,
+            )
+        
     return model
