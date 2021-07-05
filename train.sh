@@ -1,1 +1,1 @@
-python train.py -m dino_vit -e 50
+python train.py -m dino_vit -e 50 -gpu 4
