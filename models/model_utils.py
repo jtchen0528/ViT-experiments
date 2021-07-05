@@ -1,5 +1,6 @@
-from models.vit import ViT
-from models.swin_transformer import SwinTransformer
+from .vit import ViT
+from .swin_transformer import SwinTransformer
+from .CvT import CvT
 
 
 def create_model(model_name='vit', img_size=64, patch_size=8, num_classes=1000):
@@ -26,5 +27,16 @@ def create_model(model_name='vit', img_size=64, patch_size=8, num_classes=1000):
             window_size=patch_size,
             downscaling_factors=(2, 2, 2, 1),
             relative_pos_embedding=True
+        )
+    elif model_name == 'cvt':
+        model = CvT(
+            image_size=img_size,
+            in_channels=3,
+            num_classes=num_classes,
+            dim=64,
+            heads=[1, 3, 6],
+            kernels=[7, 3, 3],
+            strides=[4, 2, 2],
+            depth=[1, 2, 10]
         )
     return model
