@@ -1,1 +1,1 @@
-python train.py -m swin -e 50
+python train.py -m cvt -e 50
