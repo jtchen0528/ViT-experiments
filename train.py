@@ -185,11 +185,11 @@ for epoch in range(EPOCHS):
                 args.model_name, args.img_size, args.patch_size, args.learning_rate), 'w')
             acc_file = open("checkpoints/{}/im{}_p{}_lr{}/acc.txt".format(args.model_name,
                             args.img_size, args.patch_size, args.learning_rate), 'w')
-            loss_file.write(json.stringify({
+            loss_file.write(json.dumps({
                 'Train Loss': train_loss_list,
                 'Test Loss': test_loss_list,
             }))
-            acc_file.write(json.stringify({
+            acc_file.write(json.dumps({
                 'Accuracy Top1': acc_top1_list,
                 'Accuracy Top5': acc_top5_list,
             }))
