@@ -1,1 +1,1 @@
-python train.py -m cvt
+python train.py -m vit -e 2
