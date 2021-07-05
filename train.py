@@ -133,7 +133,10 @@ for epoch in range(EPOCHS):
             optimizer.step()
             print(test_output.shape)
             test_output_top1 = test_output.argmax(1)
-            test_output_top5 = test_output.argmax(5)
+            test_output_top5_val, test_output_top5 = test_output.topk(5, dim=1, largest=True, sorted=True)
+            print(test_output_top1)
+            print(test_output_top5)
+
             # Calculate Accuracy
 
             accuracy_top1 = (test_output_top1 ==
