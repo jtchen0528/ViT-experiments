@@ -134,14 +134,14 @@ for epoch in range(EPOCHS):
             print(test_output.shape)
             test_output_top1 = test_output.argmax(1)
             test_output_top5_val, test_output_top5 = test_output.topk(5, dim=1, largest=True, sorted=True)
-            print(test_output_top1)
-            print(test_output_top5)
+            print(test_output_top1[0])
+            print(test_output_top5[0])
 
             # Calculate Accuracy
 
             accuracy_top1 = (test_output_top1 ==
                              test_y).sum().item() / BATCH_SIZE
-            acc_top1_list.append(round(accuracy_top1.item(), 2))
+            acc_top1_list.append(round(accuracy_top1, 2))
             print('Epoch: ', epoch, '| train loss: %.4f' %
                   loss, '| test accuracy: %.2f' % accuracy_top1, end="\r", flush=True)
             if accuracy_top1 > best_eval:
