@@ -195,8 +195,9 @@ for epoch in range(EPOCHS):
         'Accuracy Top5': acc_top5_list,
     }))
 
-    os.remove("checkpoints/{}/im{}_p{}_lr{}/ep{}.pth".format(args.model_name,
-              args.img_size, args.patch_size, args.learning_rate, epoch))
+    if epoch != 0:
+        os.remove("checkpoints/{}/im{}_p{}_lr{}/ep{}.pth".format(args.model_name,
+                args.img_size, args.patch_size, args.learning_rate, epoch))
     torch.save(model.state_dict(), "checkpoints/{}/im{}_p{}_lr{}/ep{}.pth".format(
         args.model_name, args.img_size, args.patch_size, args.learning_rate, epoch + 1))
     print('Epoch: ', epoch, '| train loss: %.4f' %
