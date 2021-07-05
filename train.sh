@@ -1,1 +1,1 @@
-python train.py -m vit -e 5
+python train.py -m vit -e 50
