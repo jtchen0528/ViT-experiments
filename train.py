@@ -105,7 +105,7 @@ for epoch in range(EPOCHS):
         output = model(b_x)
         # Calculate loss
         loss = loss_func(output, b_y)
-        train_loss_list.append(round(loss.item(),2))
+        train_loss_list.append(round(loss.item(), 2))
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -127,18 +127,18 @@ for epoch in range(EPOCHS):
             # Get output (+ respective class) and compare to target
             test_output = model(test_x)
             loss = loss_func(test_output, test_y)
-            test_loss_list.append(round(loss.item(),2))
+            test_loss_list.append(round(loss.item(), 2))
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            print(test_output.shape)
             test_output_top1 = test_output.argmax(1)
             test_output_top5 = test_output.argmax(5)
-            print(test_output_top5)
             # Calculate Accuracy
 
             accuracy_top1 = (test_output_top1 ==
                              test_y).sum().item() / BATCH_SIZE
-            acc_top1_list.append(round(accuracy_top1.item(),2))
+            acc_top1_list.append(round(accuracy_top1.item(), 2))
             print('Epoch: ', epoch, '| train loss: %.4f' %
                   loss, '| test accuracy: %.2f' % accuracy_top1, end="\r", flush=True)
             if accuracy_top1 > best_eval:
