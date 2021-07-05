@@ -132,7 +132,8 @@ for epoch in range(EPOCHS):
             loss.backward()
             optimizer.step()
             test_output_top1 = test_output.argmax(1)
-            test_output_top5_val, test_output_top5 = test_output.topk(5, dim=1, largest=True, sorted=True)
+            test_output_top5_val, test_output_top5 = test_output.topk(
+                5, dim=1, largest=True, sorted=True)
 
             # Calculate Accuracy
 
@@ -142,8 +143,7 @@ for epoch in range(EPOCHS):
             for i in range(BATCH_SIZE):
                 test_output_top5_list = test_output_top5[i].tolist()
                 test_y_item = test_y[i].item()
-                print(test_y_item, test_output_top5_list)
-                if (test_output_top5_list.index(test_y_item) >= 0):
+                if (test_y_item in test_output_top5_list):
                     accuracy_top5 += 1
             accuracy_top5 = accuracy_top5 / BATCH_SIZE
             acc_top1_list.append(round(accuracy_top1, 2))
