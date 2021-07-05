@@ -174,7 +174,7 @@ for epoch in range(EPOCHS):
                     accuracy_top5 += 1
             accuracy_top5 = accuracy_top5 / BATCH_SIZE
             acc_top1_list.append(round(accuracy_top1, 2))
-            acc_top1_list.append(round(accuracy_top5, 2))
+            acc_top5_list.append(round(accuracy_top5, 2))
             print('Epoch: ', epoch, '| train loss: %.4f' %
                   loss, '| top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %.2f' % accuracy_top5, end="\r", flush=True)
             if accuracy_top1 > best_eval:
