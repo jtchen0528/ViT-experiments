@@ -24,9 +24,9 @@ parser.add_argument("-bs", "--batch_size",
 parser.add_argument("-lr", "--learning_rate",
                     help="learning rate", type=float, default=2e-5)
 parser.add_argument("-train_dir", "---train_dir", help="train data directory",
-                    type=str, default='dataset/tiny-imagenet-200/train/')
+                    type=str, default='dataset/tiny-imagenet-200/train')
 parser.add_argument("-test_dir", "---test_dir", help="test data directory",
-                    type=str, default='dataset/tiny-imagenet-200/val/')
+                    type=str, default='dataset/tiny-imagenet-200/val')
 parser.add_argument("-m", "--model_name",
                     help="vit model type", type=str, default='vit')
 parser.add_argument("-img_size", "--img_size",
