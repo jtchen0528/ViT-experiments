@@ -140,7 +140,7 @@ for epoch in range(EPOCHS):
                              test_y).sum().item() / BATCH_SIZE
             accuracy_top5 = 0
             for i in range(BATCH_SIZE):
-                if (test_output_top5[i].index(test_y[i]) >= 0):
+                if (test_output_top5[i].tolist().index(test_y[i].item()) >= 0):
                     accuracy_top5 += 1
             accuracy_top5 = accuracy_top5 / BATCH_SIZE
             acc_top1_list.append(round(accuracy_top1, 2))
