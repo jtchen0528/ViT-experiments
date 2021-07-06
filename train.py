@@ -95,8 +95,8 @@ if MODE == 'CONTINUE' or MODE == 'EVAL':
             test_loss_list = loss_file['Test Loss']
         elif f == 'acc.txt':
             acc_file = json.load(open(MODEL_PATH + '/' + f, 'r'))
-            acc_top1_list = loss_file['Accuracy Top1']
-            acc_top5_list = loss_file['Accuracy Top5']
+            acc_top1_list = acc_file['Accuracy Top1']
+            acc_top5_list = acc_file['Accuracy Top5']
 optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 loss_func = nn.CrossEntropyLoss()
 
