@@ -87,7 +87,7 @@ if MODE == 'CONTINUE' or MODE == 'EVAL':
     model_path_files = os.listdir(MODEL_PATH)
     for f in model_path_files:
         if f[:2] == 'ep':
-            model.load_state_dict(torch.load(MODEL_PATH + '/' + f))
+            model.load_state_dict(torch.load(MODEL_PATH + '/' + f, map_location=torch.device(GPU_ID)))
             CURR_EPOCH = int(f.split('.')[0][2:])
         elif f == 'loss.txt':
             loss_file = json.load(open(MODEL_PATH + '/' + f, 'r'))
