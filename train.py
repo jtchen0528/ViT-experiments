@@ -225,39 +225,42 @@ elif MODE == 'EVAL':
 
     for step, (x, y) in enumerate(eval_loader):
         # Change input array into list with each batch being one element
-        x = np.split(np.squeeze(np.array(x)), BATCH_SIZE)
-        # Remove unecessary dimension
-        for index, array in enumerate(x):
-            x[index] = np.squeeze(array)
-        # Send to GPU if available
-        x = torch.tensor(x)
-        y = torch.tensor(y)
-        if torch.cuda.is_available():
-            x, y = x.to(GPU_ID), y.to(GPU_ID)
-        b_x = Variable(x)   # batch x (image)
-        b_y = Variable(y)   # batch y (target)
-        # Feed through model
-        output = model(b_x)
-        # Calculate loss
-        test_output_top1 = output.argmax(1)
-        test_output_top5_val, test_output_top5 = output.topk(
-            5, dim=1, largest=True, sorted=True)
+        try:
+            x = np.split(np.squeeze(np.array(x)), BATCH_SIZE)
+            # Remove unecessary dimension
+            for index, array in enumerate(x):
+                x[index] = np.squeeze(array)
+            # Send to GPU if available
+            x = torch.tensor(x)
+            y = torch.tensor(y)
+            if torch.cuda.is_available():
+                x, y = x.to(GPU_ID), y.to(GPU_ID)
+            b_x = Variable(x)   # batch x (image)
+            b_y = Variable(y)   # batch y (target)
+            # Feed through model
+            output = model(b_x)
+            # Calculate loss
+            test_output_top1 = output.argmax(1)
+            test_output_top5_val, test_output_top5 = output.topk(
+                5, dim=1, largest=True, sorted=True)
 
-        # Calculate Accuracy
+            # Calculate Accuracy
 
-        accuracy_top1 = (test_output_top1 ==
-                        b_y).sum().item() / BATCH_SIZE
-        accuracy_top5 = 0
-        for i in range(BATCH_SIZE):
-            test_output_top5_list = test_output_top5[i].tolist()
-            test_y_item = b_y[i].item()
-            if (test_y_item in test_output_top5_list):
-                accuracy_top5 += 1
-        accuracy_top5 = accuracy_top5 / BATCH_SIZE
-        acc_top1_list.append(accuracy_top1)
-        acc_top5_list.append(accuracy_top5)
+            accuracy_top1 = (test_output_top1 ==
+                            b_y).sum().item() / BATCH_SIZE
+            accuracy_top5 = 0
+            for i in range(BATCH_SIZE):
+                test_output_top5_list = test_output_top5[i].tolist()
+                test_y_item = b_y[i].item()
+                if (test_y_item in test_output_top5_list):
+                    accuracy_top5 += 1
+            accuracy_top5 = accuracy_top5 / BATCH_SIZE
+            acc_top1_list.append(accuracy_top1)
+            acc_top5_list.append(accuracy_top5)
 
-        print('top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %.2f' % accuracy_top5, end="\r", flush=True)
+            print('top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %.2f' % accuracy_top5, end="\r", flush=True)
+        except:
+            pass
     print('Total top1 accuracy: %.2f' % acc_top1_list.sum() / len(acc_top1_list), '| Total top5 accuracy: %.2f' % acc_top5_list.sum() / len(acc_top5_list))
 
 # %%
