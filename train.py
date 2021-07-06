@@ -70,6 +70,7 @@ if MODE == 'TRAIN':
     test_ds = CreateDataset(folder=TEST_DS_PATH, transform=transform)
 elif MODE == 'EVAL':
     eval_ds = CreateDataset(folder=EVAL_DS_PATH, transform=transform)
+    classes = eval_ds.classes
 
 # %%
 # Define Model
