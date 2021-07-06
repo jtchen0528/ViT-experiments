@@ -90,11 +90,11 @@ if MODE == 'CONTINUE' or MODE == 'EVAL':
             model.load_state_dict(torch.load(MODEL_PATH + '/' + f))
             CURR_EPOCH = int(f.split('.')[0][2:])
         elif f == 'loss.txt':
-            loss_file = json.loads(open(MODEL_PATH + '/' + f, 'r'))
+            loss_file = json.load(open(MODEL_PATH + '/' + f, 'r'))
             train_loss_list = loss_file['Train Loss']
             test_loss_list = loss_file['Test Loss']
         elif f == 'acc.txt':
-            acc_file = json.loads(open(MODEL_PATH + '/' + f, 'r'))
+            acc_file = json.load(open(MODEL_PATH + '/' + f, 'r'))
             acc_top1_list = loss_file['Accuracy Top1']
             acc_top5_list = loss_file['Accuracy Top5']
 optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
