@@ -261,6 +261,6 @@ elif MODE == 'EVAL':
             print('top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %.2f' % accuracy_top5, end="\r", flush=True)
         except:
             pass
-    print('Total top1 accuracy: %.2f' % acc_top1_list.sum() / len(acc_top1_list), '| Total top5 accuracy: %.2f' % acc_top5_list.sum() / len(acc_top5_list))
+    print('Total top1 accuracy: %.2f' % sum(acc_top1_list) / len(acc_top1_list), '| Total top5 accuracy: %.2f' % sum(acc_top5_list) / len(acc_top5_list))
 
 # %%
