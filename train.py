@@ -220,8 +220,8 @@ elif MODE == 'EVAL':
     eval_loader = data.DataLoader(
         eval_ds, batch_size=BATCH_SIZE, shuffle=True)
 
-    acc_top1_list = []
-    acc_top5_list = []
+    acc_top1_list_val = []
+    acc_top5_list_val = []
 
     for step, (x, y) in enumerate(eval_loader):
         # Change input array into list with each batch being one element
@@ -255,13 +255,32 @@ elif MODE == 'EVAL':
                 if (test_y_item in test_output_top5_list):
                     accuracy_top5 += 1
             accuracy_top5 = accuracy_top5 / BATCH_SIZE
-            acc_top1_list.append(accuracy_top1)
-            acc_top5_list.append(accuracy_top5)
+            acc_top1_list_val.append(accuracy_top1)
+            acc_top5_list_val.append(accuracy_top5)
 
             print('top1 accuracy: %.2f' % accuracy_top1, '| top5 accuracy: %.2f' % accuracy_top5, end="\r", flush=True)
         except:
             pass
 
-    print('Total top1 accuracy: %.2f' % (sum(acc_top1_list) / len(acc_top1_list)), '| Total top5 accuracy: %.2f' % (sum(acc_top5_list) / len(acc_top5_list)))
+    print('Total top1 accuracy: %.2f' % (sum(acc_top1_list_val) / len(acc_top1_list_val)), '| Total top5 accuracy: %.2f' % (sum(acc_top5_list_val) / len(acc_top5_list_val)))
 
-# %%
+    fig, ax = plt.subplots()
+    ax.plot(acc_top1_list)
+    ax.set(xlabel='epoch', ylabel='Top1 Acc',
+        title='{} Top1 Accuracy by epochs'.MODEL_NAME)
+    fig.savefig('MODEL_PATH' + '/acc_top1.png')
+    fig, ax = plt.subplots()
+    ax.plot(acc_top5_list)
+    ax.set(xlabel='epoch', ylabel='Top5 Acc',
+        title='{} Top5 Accuracy by epochs'.MODEL_NAME)
+    fig.savefig('MODEL_PATH' + '/acc_top5.png')
+    fig, ax = plt.subplots()
+    ax.plot(train_loss_list)
+    ax.set(xlabel='epoch', ylabel='Training Loss',
+        title='{} Training Loss by epochs'.MODEL_NAME)
+    fig.savefig('MODEL_PATH' + '/train_loss.png')
+    fig, ax = plt.subplots()
+    ax.plot(test_loss_list)
+    ax.set(xlabel='epoch', ylabel='Testing Loss',
+        title='{} Testing Loss by epochs'.MODEL_NAME)
+    fig.savefig('MODEL_PATH' + '/test_loss.png')
