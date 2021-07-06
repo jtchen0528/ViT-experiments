@@ -267,20 +267,20 @@ elif MODE == 'EVAL':
     fig, ax = plt.subplots()
     ax.plot(acc_top1_list)
     ax.set(xlabel='epoch', ylabel='Top1 Acc',
-        title='{} Top1 Accuracy by epochs'.format(MODEL_NAME))
-    fig.savefig('MODEL_PATH' + '/acc_top1.png')
+        title='{} Top1 Accuracy by epochs'.format(MODEL_PATH))
+    fig.savefig(MODEL_PATH + '/acc_top1.png')
     fig, ax = plt.subplots()
     ax.plot(acc_top5_list)
     ax.set(xlabel='epoch', ylabel='Top5 Acc',
         title='{} Top5 Accuracy by epochs'.format(MODEL_NAME))
-    fig.savefig('MODEL_PATH' + '/acc_top5.png')
+    fig.savefig(MODEL_PATH + '/acc_top5.png')
     fig, ax = plt.subplots()
     ax.plot(train_loss_list)
     ax.set(xlabel='epoch', ylabel='Training Loss',
         title='{} Training Loss by epochs'.format(MODEL_NAME))
-    fig.savefig('MODEL_PATH' + '/train_loss.png')
+    fig.savefig(MODEL_PATH + '/train_loss.png')
     fig, ax = plt.subplots()
     ax.plot(test_loss_list)
     ax.set(xlabel='epoch', ylabel='Testing Loss',
         title='{} Testing Loss by epochs'.format(MODEL_NAME))
-    fig.savefig('MODEL_PATH' + '/test_loss.png')
+    fig.savefig(MODEL_PATH + '/test_loss.png')
